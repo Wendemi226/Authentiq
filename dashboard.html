@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Authentiq - Dashboard des inscriptions</title>
+  <style>
+    /* Reset and base */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body, html {
+      height: 100%;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #000;
+      color: #fff;
+      padding: 20px;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: linear-gradient(135deg, #111 0%, #222 100%);
+      border-radius: 15px;
+      padding: 30px 20px;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+      animation: pulseShadow 3s infinite alternate;
+    }
+    @keyframes pulseShadow {
+      0% {
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+      }
+      100% {
+        box-shadow: 0 0 40px rgba(255, 0, 0, 0.9);
+      }
+    }
+    h1 {
+      font-size: 2.4rem;
+      margin-bottom: 20px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #fff;
+      text-shadow: 0 0 8px #ff0000;
+      text-align: center;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 20px;
+      font-size: 1rem;
+    }
+    th, td {
+      border: 1px solid #ff0000;
+      padding: 10px 15px;
+      text-align: left;
+    }
+    th {
+      background-color: #330000;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+    tbody tr:nth-child(even) {
+      background-color: #111;
+    }
+    tbody tr:hover {
+      background-color: #440000;
+    }
+    .no-data {
+      text-align: center;
+      margin-top: 40px;
+      font-size: 1.2rem;
+      color: #ff4444;
+    }
+    /* Responsive */
+    @media (max-width: 600px) {
+      table, thead, tbody, th, td, tr {
+        display: block;
+      }
+      thead tr {
+        display: none;
+      }
+      tbody tr {
+        margin-bottom: 20px;
+        border: 1px solid #ff0000;
+        border-radius: 10px;
+        padding: 10px;
+      }
+      tbody td {
+        border: none;
+        padding: 8px 10px;
+        position: relative;
+        padding-left: 50%;
+        text-align: right;
+      }
+      tbody td::before {
+        content: attr(data-label);
+        position: absolute;
+        left: 15px;
+        width: 45%;
+        padding-left: 10px;
+        font-weight: 700;
+        text-align: left;
+        text-transform: uppercase;
+        color: #ff0000;
+      }
+    }
+    a.back-link {
+      display: inline-block;
+      margin-top: 15px;
+      color: #ff0000;
+      text-decoration: none;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+      transition: color 0.3s ease;
+    }
+    a.back-link:hover,
+    a.back-link:focus {
+      color: #ff6666;
+      outline: none;
+    }
+  </style>
+</head>
+<body>
+  <div class="container" role="main" aria-label="Dashboard des inscriptions Authentiq">
+    <h1>Dashboard des inscriptions</h1>
+    <a href="form.html" class="back-link" aria-label="Retour au formulaire">← Retour au formulaire</a>
+    <div id="dataContainer" tabindex="0">
+      <!-- Table or no data message will be inserted here -->
+    </div>
+  </div>
+
+  <script>
+    function createTable(data) {
+      if (!data || data.length === 0) {
+        return '<div class="no-data">Aucune inscription pour le moment.</div>';
+      }
+
+      let table = '<table aria-describedby="dataContainer">';
+      table += '<thead><tr><th>Nom</th><th>Prénom</th><th>Numéro</th><th>Email</th><th>Date d\'inscription</th></tr></thead><tbody>';
+
+      data.forEach(item => {
+        table += '<tr>';
+        table += `<td data-label="Nom">${item.nom}</td>`;
+        table += `<td data-label="Prénom">${item.prenom}</td>`;
+        table += `<td data-label="Numéro">${item.numero}</td>`;
+        table += `<td data-label="Email">${item.email}</td>`;
+        table += `<td data-label="Date d'inscription">${item.date}</td>`;
+        table += '</tr>';
+      });
+
+      table += '</tbody></table>';
+      return table;
+    }
+
+    function loadData() {
+      const submissions = JSON.parse(localStorage.getItem('authentiq_submissions') || '[]');
+      const container = document.getElementById('dataContainer');
+      container.innerHTML = createTable(submissions);
+    }
+
+    window.onload = loadData;
+  </script>
+</body>
+</html>

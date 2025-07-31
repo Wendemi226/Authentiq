@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Authentiq - Me tenir informé</title>
+  <style>
+    /* Reset and base */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body, html {
+      height: 100%;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #000;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+    }
+    .container {
+      max-width: 500px;
+      width: 100%;
+      background: linear-gradient(135deg, #111 0%, #222 100%);
+      border-radius: 15px;
+      padding: 40px 30px;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+      animation: pulseShadow 3s infinite alternate;
+    }
+    @keyframes pulseShadow {
+      0% {
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+      }
+      100% {
+        box-shadow: 0 0 40px rgba(255, 0, 0, 0.9);
+      }
+    }
+    h1 {
+      font-size: 2.4rem;
+      margin-bottom: 30px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #fff;
+      text-shadow: 0 0 8px #ff0000;
+      text-align: center;
+    }
+    form {
+      display: flex;
+      flex-direction: column;
+    }
+    label {
+      margin-bottom: 8px;
+      font-weight: 600;
+      color: #fff;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+    input {
+      padding: 12px 15px;
+      margin-bottom: 20px;
+      border-radius: 8px;
+      border: none;
+      font-size: 1rem;
+      font-weight: 600;
+      outline: none;
+      box-shadow: inset 0 0 8px #ff0000;
+      background-color: #111;
+      color: #fff;
+      transition: box-shadow 0.3s ease;
+    }
+    input:focus {
+      box-shadow: 0 0 12px #ff0000;
+      background-color: #222;
+    }
+    button {
+      background-color: #ff0000;
+      border: none;
+      color: #fff;
+      padding: 15px 40px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 0 15px #ff0000;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+      align-self: center;
+    }
+    button:hover,
+    button:focus {
+      background-color: #cc0000;
+      box-shadow: 0 0 25px #ff3333;
+      transform: scale(1.05);
+      outline: none;
+    }
+    .thank-you {
+      text-align: center;
+      font-size: 1.4rem;
+      color: #ff4444;
+      margin-top: 20px;
+      display: none;
+      animation: fadeIn 1s ease forwards;
+    }
+    @keyframes fadeIn {
+      from {opacity: 0;}
+      to {opacity: 1;}
+    }
+    /* Responsive */
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 1.8rem;
+      }
+      input {
+        font-size: 0.9rem;
+      }
+      button {
+        padding: 12px 30px;
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container" role="main" aria-label="Formulaire Me tenir informé Authentiq">
+    <h1>Me tenir informé</h1>
+    <form id="notifyForm" novalidate>
+      <label for="nom">Nom</label>
+      <input type="text" id="nom" name="nom" required aria-required="true" autocomplete="family-name" />
+      
+      <label for="prenom">Prénom</label>
+      <input type="text" id="prenom" name="prenom" required aria-required="true" autocomplete="given-name" />
+      
+      <label for="numero">Numéro</label>
+      <input type="tel" id="numero" name="numero" required aria-required="true" pattern="^[0-9+\-\s]{6,15}$" placeholder="+33 6 12 34 56 78" />
+      
+      <label for="email">Email</label>
+      <input type="email" id="email" name="email" required aria-required="true" autocomplete="email" />
+      
+      <button type="submit" aria-label="Envoyer le formulaire">Envoyer</button>
+    </form>
+    <div class="thank-you" id="thankYouMessage" role="alert" aria-live="polite">
+      Merci ! Nous vous tiendrons informé.
+    </div>
+    <a href="dashboard.html" class="back-link" aria-label="Voir le dashboard des inscriptions" style="display:block; margin-top:20px; color:#ff0000; text-align:center; text-transform:uppercase; font-weight:700; letter-spacing:1.5px; text-decoration:none;">Voir le dashboard</a>
+  </div>
+
+  <script>
+    const form = document.getElementById('notifyForm');
+    const thankYouMessage = document.getElementById('thankYouMessage');
+
+    form.addEventListener('submit', function(event) {
+      event.preventDefault();
+
+      if (!form.checkValidity()) {
+        form.reportValidity();
+        return;
+      }
+
+      // Here you would normally send the form data to a server
+      // For now, just show thank you message and reset form
+      form.style.display = 'none';
+      thankYouMessage.style.display = 'block';
+
+      // Save form data to localStorage
+      const formData = {
+        nom: form.nom.value.trim(),
+        prenom: form.prenom.value.trim(),
+        numero: form.numero.value.trim(),
+        email: form.email.value.trim(),
+        date: new Date().toLocaleString()
+      };
+
+      // Retrieve existing submissions or initialize empty array
+      const submissions = JSON.parse(localStorage.getItem('authentiq_submissions') || '[]');
+      submissions.push(formData);
+      localStorage.setItem('authentiq_submissions', JSON.stringify(submissions));
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>Authentiq - Coming Soon</title>
+  <style>
+    /* Reset and base */
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body, html {
+      height: 100%;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      background-color: #000;
+      color: #fff;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      text-align: center;
+      padding: 20px;
+    }
+    .container {
+      max-width: 600px;
+      width: 100%;
+      background: linear-gradient(135deg, #111 0%, #222 100%);
+      border-radius: 15px;
+      padding: 40px 30px;
+      box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+      animation: pulseShadow 3s infinite alternate;
+    }
+    @keyframes pulseShadow {
+      0% {
+        box-shadow: 0 0 20px rgba(255, 0, 0, 0.5);
+      }
+      100% {
+        box-shadow: 0 0 40px rgba(255, 0, 0, 0.9);
+      }
+    }
+    h1 {
+      font-size: 2.8rem;
+      margin-bottom: 20px;
+      letter-spacing: 2px;
+      text-transform: uppercase;
+      color: #fff;
+      text-shadow: 0 0 8px #ff0000;
+    }
+    .countdown {
+      display: flex;
+      justify-content: space-around;
+      margin: 30px 0 40px;
+      font-weight: 700;
+      font-size: 1.8rem;
+      color: #fff;
+      text-shadow: 0 0 6px #ff0000;
+    }
+    .countdown div {
+      flex: 1;
+      padding: 0 10px;
+      animation: fadeInUp 1s ease forwards;
+    }
+    .countdown div span {
+      display: block;
+      font-size: 3.5rem;
+      font-weight: 900;
+      color: #fff;
+      text-shadow: 0 0 10px #ff0000;
+      margin-bottom: 5px;
+    }
+    .label {
+      font-size: 1rem;
+      color: #ccc;
+      text-transform: uppercase;
+      letter-spacing: 1.5px;
+    }
+    @keyframes fadeInUp {
+      0% {
+        opacity: 0;
+        transform: translateY(20px);
+      }
+      100% {
+        opacity: 1;
+        transform: translateY(0);
+      }
+    }
+    button {
+      background-color: #ff0000;
+      border: none;
+      color: #fff;
+      padding: 15px 40px;
+      font-size: 1.2rem;
+      font-weight: 700;
+      border-radius: 50px;
+      cursor: pointer;
+      box-shadow: 0 0 15px #ff0000;
+      transition: background-color 0.3s ease, box-shadow 0.3s ease, transform 0.2s ease;
+      text-transform: uppercase;
+      letter-spacing: 2px;
+    }
+    button:hover,
+    button:focus {
+      background-color: #cc0000;
+      box-shadow: 0 0 25px #ff3333;
+      transform: scale(1.05);
+      outline: none;
+    }
+    /* Responsive */
+    @media (max-width: 480px) {
+      h1 {
+        font-size: 2rem;
+      }
+      .countdown {
+        font-size: 1.2rem;
+      }
+      .countdown div span {
+        font-size: 2.5rem;
+      }
+      button {
+        padding: 12px 30px;
+        font-size: 1rem;
+      }
+    }
+  </style>
+</head>
+<body>
+  <div class="container" role="main" aria-label="Page de lancement Authentiq avec décompte">
+    <h1>Authentiq</h1>
+    <div class="countdown" aria-live="polite" aria-atomic="true">
+      <div>
+        <span id="days">100</span>
+        <div class="label">Jours</div>
+      </div>
+      <div>
+        <span id="hours">00</span>
+        <div class="label">Heures</div>
+      </div>
+      <div>
+        <span id="minutes">00</span>
+        <div class="label">Minutes</div>
+      </div>
+      <div>
+        <span id="seconds">00</span>
+        <div class="label">Secondes</div>
+      </div>
+    </div>
+<button type="button" aria-label="Me tenir informé" onclick="location.href='form.html'">Me tenir informé</button>
+  </div>
+
+  <script>
+    // Set countdown target date 100 days from now
+    const countdownDuration = 100 * 24 * 60 * 60 * 1000; // 100 days in ms
+    const targetTime = new Date().getTime() + countdownDuration;
+
+    function updateCountdown() {
+      const now = new Date().getTime();
+      const distance = targetTime - now;
+
+      if (distance < 0) {
+        // Countdown finished
+        document.getElementById('days').textContent = '0';
+        document.getElementById('hours').textContent = '00';
+        document.getElementById('minutes').textContent = '00';
+        document.getElementById('seconds').textContent = '00';
+        clearInterval(timerInterval);
+        return;
+      }
+
+      const days = Math.floor(distance / (1000 * 60 * 60 * 24));
+      const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+      const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
+      const seconds = Math.floor((distance % (1000 * 60)) / 1000);
+
+      document.getElementById('days').textContent = days;
+      document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+      document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+      document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+    }
+
+    const timerInterval = setInterval(updateCountdown, 1000);
+    updateCountdown();
+  </script>
+</body>
+</html>
